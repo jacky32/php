@@ -1,0 +1,43 @@
+services:
+  mysql:
+    image: mysql:8.4
+    command: mysqld -h 127.0.0.1 -P 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd
+      MYSQL_USER: php_app
+      MYSQL_PASSWORD: php_app
+      MYSQL_DATABASE: php_app_development
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mysql
+    ports:
+      - 3307:3306
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'mysqladmin',
+          'ping',
+          '-h',
+          'localhost',
+          '-u',
+          'php_app',
+          '--password=php_app',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: always
+
+networks:
+  mysql:
+
+volumes:
+  mysql-data:
