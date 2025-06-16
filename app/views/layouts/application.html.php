@@ -1,10 +1,9 @@
 <html>
 
-<title><?php echo $title; ?></title>
+<title><?php echo $this->title; ?></title>
 
 <body>
-  <div>test</div>
-  <?php include($content); ?>
+  <?php echo $this->content; ?>
 </body>
 
 </html>

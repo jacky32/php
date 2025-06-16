@@ -20,4 +20,13 @@ class PostsController extends ApplicationController
             "posts" => Post::all()
         ]);
     }
+
+    public function create($request)
+    {
+        if (isset($request['body'])) {
+            $post = new Post(['body' => $request['body']]);
+            $post->save();
+        }
+        header("Location: /posts");
+    }
 }

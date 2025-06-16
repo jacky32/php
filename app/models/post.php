@@ -4,6 +4,14 @@ class Post extends ApplicationRecord
 {
   private $body;
 
+  public function __construct($data = [])
+  {
+    parent::__construct($data);
+    if (isset($data['body'])) {
+      $this->set_body($data['body']);
+    }
+  }
+
   // Methods
   function set_body($body)
   {
@@ -14,12 +22,21 @@ class Post extends ApplicationRecord
     return $this->body;
   }
 
+  function save()
+  {
+    $sql = "INSERT INTO posts (body) VALUES ('" . $this->get_body() . "');";
+    $database = new Database();
+    $connection = $database->getConnection();
+    $connection->query($sql);
+  }
+
   public static function all()
   {
     $posts = [];
-    $query = "SELECT * FROM posts";
+    $sql = "SELECT * FROM posts;";
     $database = new Database();
-    $result = $database->getConnection()->query($query);
+    $connection = $database->getConnection();
+    $result = $connection->query($sql);
 
     while ($row = $result->fetch_assoc()) {
       $post = new Post(["body" => $row['body']]);

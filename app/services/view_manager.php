@@ -5,6 +5,7 @@ class ViewManager
   private $controller;
   private $action;
   private $title;
+  private $controllerData;
 
   public function __construct()
   {
@@ -15,20 +16,25 @@ class ViewManager
 
   public function render($view, $data = [])
   {
-    extract($data);
-    $this->content = require "app/views/$view.html.php";
+    $this->controllerData = extract($data);
+    ob_start();
+    $this->title = isset($title) ? $title : $this->controller;
+    include "app/views/$view.html.php";
+    $this->content = ob_get_contents();
+    ob_end_clean();
+    return $this->content;
   }
 
   public function __destruct()
   {
-    include 'views/layouts/application.html.php';
+    include 'app/views/layouts/application.html.php';
   }
 
 
-  public function renderView($variables = null)
-  {
-    \ob_start();
-    require "../{$this->controller}/{$this->action}.html.php";
-    $this->content = \ob_get_clean();
-  }
+  // public function renderView($variables = null)
+  // {
+  // \ob_start();
+  // require "../{$this->controller}/{$this->action}.html.php";
+  // $this->content = \ob_get_clean();
+  // }
 }
