@@ -1,9 +1,32 @@
-<!DOCTYPE html>
-<html>
+<?php
+$appConfig = require './config/application.php';
 
-<body>
+function toSnakeCase($input)
+{
+  return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
+}
 
-  <a href="posts.php">Posts</a>
-</body>
+$routeAction = $_SERVER["REQUEST_URI"];
+if (isset($_GET['action'])) {
+  $routeAction = $_GET['action'];
+}
 
-</html>
+// router
+switch ($routeAction) {
+  default:
+    $controllerName = 'PostsController';
+    $action = 'index';
+    break;
+}
+
+require 'app/controllers/' . toSnakeCase($controllerName)  . '.php';
+require 'app/services/database.php';
+
+$db = new Database($appConfig);
+$dbConnection = null;
+if ($db) {
+  $dbConnection = $db->getConnection();
+}
+
+$controller = new $controllerName($dbConnection);
+$controller->{$action}($_REQUEST);
