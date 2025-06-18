@@ -3,7 +3,7 @@ class ScriptManager
 {
   public static function connectToDatabase($connectionParams)
   {
-    $db = new \mysqli(
+    $db = new mysqli(
       $connectionParams['host'],
       $connectionParams['user'],
       $connectionParams['password'],
@@ -22,7 +22,7 @@ class ScriptManager
     $output = [];
     $conn = ScriptManager::connectToDatabase($connectionParams);
     if ($conn->connect_error) {
-      throw new \Exception("Connection failed: " . $conn->connect_error);
+      throw new Exception("Connection failed: " . $conn->connect_error);
     }
     $sql = "CREATE DATABASE " . $connectionParams['dbname'];
     if ($conn->query($sql) === TRUE) {
@@ -33,8 +33,8 @@ class ScriptManager
 
     $conn = ScriptManager::connectToDatabase($connectionParams);
     $conn->store_result();
-    $sql = \file_get_contents('./schema.sql');
-    if (\mysqli_multi_query($conn, $sql)) {
+    $sql = file_get_contents('./schema.sql');
+    if (mysqli_multi_query($conn, $sql)) {
       $output[] = "<br />SQL installation script is executed successfully";
     } else {
       throw new \Exception("Error of database setting up: " . $conn->error);
