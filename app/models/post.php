@@ -22,12 +22,17 @@ class Post extends ApplicationRecord
     return $this->body;
   }
 
+  function validate()
+  {
+    if ($this->get_body() == null) throw new Exception("Body cannot be null");
+    if (strlen($this->get_body()) > 255) throw new Exception("Body cannot be longer than 255 characters");
+  }
+
   function save()
   {
+    $this->validate();
     $sql = "INSERT INTO posts (body) VALUES ('" . $this->get_body() . "');";
-    $database = new Database();
-    $connection = $database->getConnection();
-    $connection->query($sql);
+    $this->connection->query($sql);
   }
 
   public static function all()

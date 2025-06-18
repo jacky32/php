@@ -5,28 +5,36 @@ require 'app/services/view_manager.php';
 
 class PostsController extends ApplicationController
 {
-    private $post;
+  private $post;
 
-    public function __construct($postModel)
-    {
-        $this->post = $postModel;
+  public function __construct($postModel)
+  {
+    parent::__construct();
+    $this->post = $postModel;
+  }
+
+
+  public function index($request)
+  {
+    $this->viewManager->render("posts/index", [
+      "posts" => Post::all()
+    ]);
+  }
+
+  public function create($request)
+  {
+    try {
+      if (isset($request['body'])) {
+        $post = new Post(['body' => $request['body']]);
+        $post->save();
+      }
+      header("Location: /posts");
+    } catch (Exception $e) {
+      $errors[] = $e->getMessage();
+      $this->viewManager->render("posts/index", [
+        "posts" => Post::all(),
+        "errors" => $errors,
+      ]);
     }
-
-
-    public function index($request)
-    {
-        $View = new ViewManager();
-        $View->render("posts/index", [
-            "posts" => Post::all()
-        ]);
-    }
-
-    public function create($request)
-    {
-        if (isset($request['body'])) {
-            $post = new Post(['body' => $request['body']]);
-            $post->save();
-        }
-        header("Location: /posts");
-    }
+  }
 }

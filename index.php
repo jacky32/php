@@ -1,36 +1,20 @@
 <?php
 $appConfig = require './config/application.php';
+require 'config/router.php';
+require 'app/services/database.php';
 
 function toSnakeCase($input)
 {
   return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
 }
 
-$routeAction = $_SERVER["REQUEST_URI"];
-if (isset($_GET['action'])) {
-  $routeAction = $_GET['action'];
-}
-$requestMethod = $_SERVER['REQUEST_METHOD'];
-
 // router
-switch ($routeAction) {
-  case '/posts':
-    if ($requestMethod === 'POST') {
-      $controllerName = 'PostsController';
-      $action = 'create';
-    } else {
-      $controllerName = 'PostsController';
-      $action = 'index';
-    }
-    break;
-  default:
-    $controllerName = 'PostsController';
-    $action = 'index';
-    break;
-}
+$router = new Router();
+
+$controllerName = $router->controllerName;
+$action = $router->action;
 
 require 'app/controllers/' . toSnakeCase($controllerName)  . '.php';
-require 'app/services/database.php';
 
 $db = new Database($appConfig);
 $dbConnection = null;
