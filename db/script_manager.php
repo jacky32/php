@@ -1,6 +1,7 @@
 <?php
 class ScriptManager
 {
+  // Connect to MySQL server with specifying a database
   public static function connectToDatabase($connectionParams)
   {
     $db = new mysqli(
@@ -16,26 +17,22 @@ class ScriptManager
 
     return $db;
   }
-
-  public static function loadSchema($connectionParams)
+  // Load db schema from file db/schema.sql
+  public static function loadSchema($connectionParams, $reset = false)
   {
     $output = [];
-    $conn = ScriptManager::connectToDatabase($connectionParams);
-    if ($conn->connect_error) {
-      throw new Exception("Connection failed: " . $conn->connect_error);
-    }
-    $sql = "CREATE DATABASE " . $connectionParams['dbname'];
-    if ($conn->query($sql) === TRUE) {
-      echo "Database created successfully";
-    } else {
-      $output[] = "<br />Error creating database: " . $conn->error;
-    }
+    // Connect to db without specifying a database
+    $conn = new mysqli($connectionParams['host'], $connectionParams['user'], $connectionParams['password']);
 
-    $conn = ScriptManager::connectToDatabase($connectionParams);
     $conn->store_result();
-    $sql = file_get_contents('./schema.sql');
+
+    $sql = file_get_contents('db/schema.sql');
+    $sql = str_replace("DB_NAME", $connectionParams['dbname'], $sql);
+    if ($reset) {
+      $sql = "DROP DATABASE IF EXISTS " . $connectionParams['dbname'] . "; " . $sql;
+    }
     if (mysqli_multi_query($conn, $sql)) {
-      $output[] = "<br />SQL installation script is executed successfully";
+      $output[] = "<br />SQL load schema script executed successfully";
     } else {
       throw new \Exception("Error of database setting up: " . $conn->error);
     }

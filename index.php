@@ -16,6 +16,9 @@ $action = $router->action;
 
 require 'app/controllers/' . toSnakeCase($controllerName)  . '.php';
 
+// Uncomment to reset DB schema
+// ScriptManager::loadSchema($appConfig['connection'], true);
+
 $db = new Database($appConfig);
 $dbConnection = null;
 if ($db) {
