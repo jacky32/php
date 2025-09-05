@@ -2,6 +2,7 @@
 $appConfig = require './config/application.php';
 require 'config/router.php';
 require 'app/services/database.php';
+require __DIR__ . '/vendor/autoload.php';
 
 function toSnakeCase($input)
 {
@@ -18,6 +19,15 @@ require 'app/controllers/' . toSnakeCase($controllerName)  . '.php';
 
 // Uncomment to reset DB schema
 // ScriptManager::loadSchema($appConfig['connection'], true);
+// Uncomment to load DB and tables without dropping existing DB
+ScriptManager::loadSchema($appConfig['connection']);
+
+// // CSRF token
+// session_start();
+// if (empty($_SESSION['token'])) {
+//   $_SESSION['token'] = bin2hex(random_bytes(32));
+// }
+// $token = $_SESSION['token'];
 
 $db = new Database($appConfig);
 $dbConnection = null;

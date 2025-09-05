@@ -6,9 +6,11 @@ class ViewManager
   private $action;
   private $title;
   private $controllerData;
+  private $auth;
 
-  public function __construct()
+  public function __construct($auth)
   {
+    $this->auth = $auth;
     $tmp = debug_backtrace();
     $this->controller = str_replace("controller", "", strtolower($tmp[1]['class']));
     $this->action = str_replace("action", "", strtolower($tmp[1]['function']));
