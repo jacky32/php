@@ -32,15 +32,24 @@ class SessionsController extends ApplicationController
     try {
       $this->auth->login($_POST['email'], $_POST['password']);
     } catch (\Delight\Auth\InvalidEmailException $e) {
-      die('Wrong email address');
+      $this->addFlash('error', "Špatný email");
+      header("Location: /login");
+      die();
     } catch (\Delight\Auth\InvalidPasswordException $e) {
-      die('Wrong password');
+      $this->addFlash('error', "Špatné heslo");
+      header("Location: /login");
+      die();
     } catch (\Delight\Auth\EmailNotVerifiedException $e) {
-      die('Email not verified');
+      $this->addFlash('error', "Email nebyl ověřen");
+      header("Location: /login");
+      die();
     } catch (\Delight\Auth\TooManyRequestsException $e) {
-      die('Too many requests');
+      $this->addFlash('error', "Příliš mnoho pokusů");
+      header("Location: /login");
+      die();
     }
     $this->addFlash('success', "Úspěšně přihlášen");
+    header("Location: /");
     // try {
     // $user = new \User();
     // if (isset($request['name'])) {

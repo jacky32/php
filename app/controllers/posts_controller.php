@@ -46,11 +46,15 @@ class PostsController extends ApplicationController
   public function destroy($request)
   {
     $post = Post::find($request['id']);
-    // TODO: Flashes and errors
     if ($post && $post->get_author_id() == $this->auth->getUserId()) {
       $post->destroy();
       $this->addFlash('success', "Příspěvek byl úspěšně smazán.");
     } else {
+      if (!$post) {
+        $this->addFlash('error', "Příspěvek neexistuje.");
+      } else if ($post->get_author_id() != $this->auth->getUserId()) {
+        $this->addFlash('error', "Nemáte oprávnění smazat tento příspěvek.");
+      }
       $this->addFlash('error', "Nastala chyba");
     }
     header("Location: /posts");
