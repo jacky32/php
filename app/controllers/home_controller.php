@@ -12,6 +12,6 @@ class HomeController extends ApplicationController
 
   public function index($request)
   {
-    $this->viewManager->render("home/index", []);
+    $this->render("home/index", []);
   }
 }

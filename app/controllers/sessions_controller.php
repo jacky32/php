@@ -21,7 +21,7 @@ class SessionsController extends ApplicationController
       $this->addFlash('info', "Již přihlášen");
       header("Location: /");
     } else {
-      $this->viewManager->render("sessions/new", [
+      $this->render("sessions/new", [
         "users" => \User::all()
       ]);
     }
@@ -31,8 +31,6 @@ class SessionsController extends ApplicationController
   {
     try {
       $this->auth->login($_POST['email'], $_POST['password']);
-
-      echo 'User is logged in';
     } catch (\Delight\Auth\InvalidEmailException $e) {
       die('Wrong email address');
     } catch (\Delight\Auth\InvalidPasswordException $e) {
@@ -55,7 +53,7 @@ class SessionsController extends ApplicationController
     // header("Location: /login");
     // } catch (\Exception $e) {
     //   $errors[] = $e->getMessage();
-    //   $this->viewManager->render("sessions/index", [
+    //   $this->render("sessions/index", [
     //     "users" => \User::all(),
     //     "errors" => $errors,
     //   ]);

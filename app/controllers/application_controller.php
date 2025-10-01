@@ -17,4 +17,9 @@ class ApplicationController
   {
     FlashManager::addFlash($type, $message);
   }
+
+  protected function render($view, $data = [])
+  {
+    $this->viewManager->render($view, $data);
+  }
 }

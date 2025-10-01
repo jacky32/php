@@ -16,7 +16,7 @@ class PostsController extends ApplicationController
 
   public function index($request)
   {
-    $this->viewManager->render("posts/index", [
+    $this->render("posts/index", [
       "posts" => Post::all()
     ]);
   }
@@ -24,17 +24,35 @@ class PostsController extends ApplicationController
   public function create($request)
   {
     try {
-      if (isset($request['body'])) {
-        $post = new Post(['body' => $request['body']]);
-        $post->save();
-      }
+      // if (isset($request['body'])) {
+      // }
+      $post = new Post([
+        'name' => $request['name'],
+        'body' => $request['body'],
+        'author_id' => $this->auth->getUserId()
+      ]);
+      $post->save();
+      $this->addFlash('success', "Příspěvek byl úspěšně vytvořen.");
       header("Location: /posts");
     } catch (Exception $e) {
       $errors[] = $e->getMessage();
-      $this->viewManager->render("posts/index", [
+      $this->render("posts/index", [
         "posts" => Post::all(),
         "errors" => $errors,
       ]);
     }
+  }
+
+  public function destroy($request)
+  {
+    $post = Post::find($request['id']);
+    // TODO: Flashes and errors
+    if ($post && $post->get_author_id() == $this->auth->getUserId()) {
+      $post->destroy();
+      $this->addFlash('success', "Příspěvek byl úspěšně smazán.");
+    } else {
+      $this->addFlash('error', "Nastala chyba");
+    }
+    header("Location: /posts");
   }
 }

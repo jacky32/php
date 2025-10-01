@@ -45,6 +45,14 @@ class Router
             break;
         }
         break;
+      case '/posts/destroy':
+        $this->controllerName = 'PostsController';
+        switch ($requestMethod) {
+          case 'POST':
+            $this->action = 'destroy';
+            break;
+        }
+        break;
       case '/posts':
         $this->controllerName = 'PostsController';
         switch ($requestMethod) {

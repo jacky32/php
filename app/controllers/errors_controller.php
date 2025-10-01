@@ -14,6 +14,6 @@ class ErrorsController extends ApplicationController
 
   public function notFound($request)
   {
-    $this->viewManager->render("layouts/errors/404", []);
+    $this->render("layouts/errors/404", []);
   }
 }

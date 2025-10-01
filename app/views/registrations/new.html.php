@@ -1,23 +1,52 @@
-  <?php
-  foreach ($users as $user) {
-    echo $user->get_username() . "<br>";
-    echo $user->get_email() . "<br>";
-  }
-  echo count($users) . " users found.<br>";
-  ?>
+<section class='hero'>
+  <div class='hero-content'>
+    <form action="/registration" method="POST">
+      <?php
+      if (isset($errors) && count($errors) > 0) {
+        echo "<div class='error'>";
+        foreach ($errors as $error) {
+          echo $error . "<br>";
+        }
+        echo "</div>";
+      }
+      ?>
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+        <legend class="fieldset-legend">Registrace</legend>
 
-  <?php
-  if (isset($errors) && count($errors) > 0) {
-    echo "<div class='error'>";
-    foreach ($errors as $error) {
-      echo $error . "<br>";
-    }
-    echo "</div>";
-  }
-  ?>
-  <form action="/registration" method="POST">
-    Jméno: <input type="text" name="username"><br>
-    Email: <input type="email" name="email"><br>
-    Heslo: <input type="password" name="password"><br>
-    <input type="submit" value="Odeslat">
-  </form>
+        <label class='floating-label my-1'>
+          <span>Jméno</span>
+          <input
+            required
+            type='text'
+            name='username'
+            placeholder='Jméno'
+            class='input input-md' />
+        </label>
+
+        <label class='floating-label my-1'>
+          <span>Email</span>
+          <input
+            required
+            type='email'
+            name='email'
+            placeholder='Email'
+            class='input input-md' />
+        </label>
+
+        <label class='floating-label my-1'>
+          <span>Heslo</span>
+          <input
+            required
+            type='password'
+            name='password'
+            placeholder='Heslo'
+            class='input input-md' />
+        </label>
+
+        <button class="btn btn-primary mt-4">Registrovat</button>
+
+        <a href="/login" class="btn btn-neutral mt-2">Zpět na přihlášení</a>
+      </fieldset>
+    </form>
+  </div>
+</section>

@@ -2,12 +2,13 @@
 $appConfig = require './config/application.php';
 require 'config/router.php';
 require 'app/services/database.php';
+require 'lib/helpers.php';
 require __DIR__ . '/vendor/autoload.php';
 
-function toSnakeCase($input)
-{
-  return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
-}
+// Uncomment to reset DB schema
+// ScriptManager::loadSchema($appConfig['connection'], true);
+// Uncomment to load DB and tables without dropping existing DB
+ScriptManager::loadSchema($appConfig['connection']);
 
 // router
 $router = new Router();
@@ -16,11 +17,6 @@ $controllerName = $router->controllerName;
 $action = $router->action;
 
 require 'app/controllers/' . toSnakeCase($controllerName)  . '.php';
-
-// Uncomment to reset DB schema
-// ScriptManager::loadSchema($appConfig['connection'], true);
-// Uncomment to load DB and tables without dropping existing DB
-ScriptManager::loadSchema($appConfig['connection']);
 
 // // CSRF token
 // session_start();

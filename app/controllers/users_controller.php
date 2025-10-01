@@ -17,7 +17,7 @@ class UsersController extends ApplicationController
 
   public function new($request)
   {
-    $this->viewManager->render("registrations/new", [
+    $this->render("registrations/new", [
       "users" => \User::all()
     ]);
   }
@@ -43,14 +43,12 @@ class UsersController extends ApplicationController
     //   }
     //   $user->save();
     try {
-      $userId = $this->auth->register($_POST['email'], $_POST['password'], $_POST['username']);
+      $this->auth->register($_POST['email'], $_POST['password'], $_POST['username']);
       // , function ($selector, $token) {
       //   echo 'Send ' . $selector . ' and ' . $token . ' to the user (e.g. via email)';
       //   echo '  For emails, consider using the mail(...) function, Symfony Mailer, Swiftmailer, PHPMailer, etc.';
       //   echo '  For SMS, consider using a third-party service and a compatible SDK';
       // });
-
-      echo 'We have signed up a new user with the ID ' . $userId;
     } catch (\Delight\Auth\InvalidEmailException $e) {
       die('Invalid email address');
     } catch (\Delight\Auth\InvalidPasswordException $e) {
@@ -60,10 +58,11 @@ class UsersController extends ApplicationController
     } catch (\Delight\Auth\TooManyRequestsException $e) {
       die('Too many requests');
     }
-    header("Location: /registration/new");
+    // header("Location: /registration/new");
+    $this->addFlash('success', "Úspěšně zaregistrován");
     // } catch (\Exception $e) {
     //   $errors[] = $e->getMessage();
-    //   $this->viewManager->render("registrations/new", [
+    //   $this->render("registrations/new", [
     //     "users" => \User::all(),
     //     "errors" => $errors,
     //   ]);

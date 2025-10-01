@@ -24,7 +24,8 @@ class FlashManager
     $_SESSION['FLASHES_DISPLAY_COUNT'] = isset($_SESSION['FLASHES_DISPLAY_COUNT']) ? $_SESSION['FLASHES_DISPLAY_COUNT'] + 1 : 1;
     // TODO: Flash management
     if ($_SESSION['FLASHES_DISPLAY_COUNT'] >= 2) {
-      // unset($_SESSION['FLASHES']);
+      unset($_SESSION['FLASHES']);
+      unset($_SESSION['FLASHES_DISPLAY_COUNT']);
     }
     return $flashes;
   }

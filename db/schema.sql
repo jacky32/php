@@ -1,12 +1,5 @@
 CREATE DATABASE IF NOT EXISTS DB_NAME;
 
-CREATE TABLE IF NOT EXISTS DB_NAME.posts (
-    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    body VARCHAR(30) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  );
-
 -- Auth tables - https://github.com/delight-im/PHP-Auth/blob/master/Database/MySQL.sql
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -28,7 +21,7 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users (
   `force_logout` mediumint unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS DB_NAME.users_2fa (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -39,7 +32,7 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users_2fa (
   `expires_at` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id_mechanism` (`user_id`,`mechanism`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS DB_NAME.users_audit_log (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -54,7 +47,7 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users_audit_log (
   KEY `event_at` (`event_at`),
   KEY `user_id_event_at` (`user_id`,`event_at`),
   KEY `user_id_event_type_event_at` (`user_id`,`event_type`,`event_at`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS DB_NAME.users_confirmations (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -67,7 +60,7 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users_confirmations (
   UNIQUE KEY `selector` (`selector`),
   KEY `email_expires` (`email`,`expires`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS DB_NAME.users_otps (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -80,7 +73,7 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users_otps (
   PRIMARY KEY (`id`),
   KEY `user_id_mechanism` (`user_id`,`mechanism`),
   KEY `selector_user_id` (`selector`,`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS DB_NAME.users_remembered (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -91,7 +84,7 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users_remembered (
   PRIMARY KEY (`id`),
   UNIQUE KEY `selector` (`selector`),
   KEY `user` (`user`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS DB_NAME.users_resets (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
@@ -102,7 +95,7 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users_resets (
   PRIMARY KEY (`id`),
   UNIQUE KEY `selector` (`selector`),
   KEY `user_expires` (`user`,`expires`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS DB_NAME.users_throttling (
   `bucket` varchar(44) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
@@ -111,8 +104,21 @@ CREATE TABLE IF NOT EXISTS DB_NAME.users_throttling (
   `expires_at` int unsigned NOT NULL,
   PRIMARY KEY (`bucket`),
   KEY `expires_at` (`expires_at`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+-- App-defined tables
+
+CREATE TABLE IF NOT EXISTS php_app_development.posts (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(10) NOT NULL,
+  body VARCHAR(30) NOT NULL,
+  author_id INT UNSIGNED,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (author_id) REFERENCES php_app_development.users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
